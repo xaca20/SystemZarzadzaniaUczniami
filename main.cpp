@@ -2,59 +2,93 @@
 
 int main()
 {
-    cout << "===========================" << endl;
-    cout << "System zarzadzania uczniami" << endl;
-    cout << "===========================" << endl;
-    cout << "Wybierz opcje:" << endl;
-    cout << "1. Wprowadz dane ucznia" << endl;
-    cout << "2. Wprowadz dane nauczyciela" << endl;
-    cout << "3. Wprowadz dane przedmiotu" << endl;
-    cout << "4. Wprowadz dane platnosci" << endl;
-    cout << "5. Wprowadz dane harmonogramu" << endl;
-    char opcja = 0;
-    cin >> opcja;
-    switch (opcja)
+    int opcja = 0;
+    do
     {
-    case '1':
-    {
-        Uczen u1("Maciek", "Kowalski", "3B", "rozszerzony", "dzienny");
-        //u1.podajDane();
-        u1.wyswietl();
-        break;
-    }
-    case '2':
-    {
-        Nauczyciel n1("Miroslaw", "Zelent", "Informatyka", 35);
-        //n1.podajDane();
-        n1.wyswietl();
-        break;
-    }
-    case '3':
-    {
-        Przedmiot p1;
-        p1.podajDane();
-        p1.wyswietl();
-        break;
-    }
-    case '4':
-    {
-        Platnosc plat1;
-        plat1.podajDane();
-        plat1.wyswietl();
-        break;
-    }
-    case '5':
-    {
-        Harmonogram h1;
-        h1.podajHarmonogram();
-        h1.wyswietl();
-        break;
-    }
-    default:
-    {
-        cout << "Nieznana opcja!" << endl;
-        break;
-    }
-    }
+        system("cls");
+        cout << "=================================" << endl;
+        cout << "  System zarzadzania uczniami" << endl;
+        cout << "=================================" << endl;
+        cout << "  Wybierz opcje:" << endl;
+        cout << "  1. Wprowadz dane ucznia" << endl;
+        cout << "  2. Modyfikuj dane ucznia" << endl;
+        cout << "  3. Wprowadz dane nauczyciela" << endl;
+        cout << "  4. Modyfikuj dane nauczyciela" << endl;
+        cout << "  5. Wprowadz dane przedmiotu" << endl;
+        cout << "  6. Modyfikuj dane przedmiotu" << endl;
+        cout << "  7. Wprowadz dane platnosci" << endl;
+        cout << "  8. Wyświetl harmonogram zajęć" << endl;
+        cout << "  9. Wyjscie" << endl;
+        cin >> opcja;
+        switch (opcja)
+        {
+        case 1:
+        {
+            system("cls");
+            Uczen u1;
+            UstawUczen(u1);
+            break;
+        }
+        case 2:
+        {
+            system("cls");
+            cout<<modyfikujUczen();
+            Sleep(5000);
+            break;
+        }
+        case 3:
+        {
+            system("cls");
+            Nauczyciel n1;
+            UstawNauczyciel(n1);
+            break;
+        }
+        case 4:
+        {
+            system("cls");
+            cout<<modyfikujNauczyciel();
+            Sleep(5000);
+            break;
+        }
+        case 5:
+        {
+            system("cls");
+            Harmonogram h1;
+            h1.podajHarmonogram();
+            h1.wyswietl();
+            break;
+        }
+        case 6:
+        {
+            system("cls");
+            cout << "Dziekujemy za skorzystanie z programu!" << endl;
+            break;
+        }
+        case 7:
+        {
+            system("cls");
+            cout << "Dziekujemy za skorzystanie z programu!" << endl;
+            break;
+        }
+        case 8:
+        {
+            system("cls");
+            cout << "Dziekujemy za skorzystanie z programu!" << endl;
+            break;
+        }
+        case 9:
+        {
+            system("cls");
+            cout << "Dziekujemy za skorzystanie z programu!" << endl;
+            break;
+        }
+        default:
+        {
+            system("cls");
+            cout << "Nieznana opcja! Spróbuj ponownie!" << endl;
+            break;
+        }
+        }
+    } while (opcja != 9);
     return 0;
 }
