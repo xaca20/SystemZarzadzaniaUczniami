@@ -1,11 +1,6 @@
-Dawid      |      Chrz¥szcz      |      Matematyka|0|0|0|maniek      |      adam      |      4f      |      r      |      s
-Dawid   |   Chrz¥szcz   |   Matematyka|12|12|12|Jacek   |   Pyszka   |   3j   |   r   |   s     |  Dawid   |   Chrz¥szcz   |   6j   |   p   |   o     |  maniek   |   adam   |   4f   |   r   |   s
-Dawid    |    Chrz¥szcz    |    Matematyka|2|2|2|Jacek    |    Pyszka    |    3j    |    r    |    s,Dawid
-Dawid     |     Chrz¥szcz     |     Matematyka|5|5|5|Dawid     |     Chrz¥szcz     |     6j     |     p     |     o,Jacek
-Dawid | Chrz¥szcz | Matematyka|56|56|56|Dawid | Chrz¥szcz | 6j | p | o   |maniek | adam | 4f | r | s   |Jacek | Pyszka | 3j | r | s
-Dawid        |        Chrz¥szcz        |        Matematyka|6|6|6|maniek        |        adam        |        4f        |        r        |        s
-Dawid|Chrz¥szcz|Matematyka|66|66|66|Jacek|Pyszka|3j|r|s  |Dawid|Chrz¥szcz|6j|p|o  |maniek|adam|4f|r|s
-Dawid  |  Chrz¥szcz  |  Matematyka|67|67|67|Jacek  |  Pyszka  |  3j  |  r  |  s    | Dawid  |  Chrz¥szcz  |  6j  |  p  |  o    | maniek  |  adam  |  4f  |  r  |  s
-Dawid         |         Chrz¥szcz         |         Matematyka|7|7|7|Dawid         |         Chrz¥szcz         |         6j         |         p         |         o
-Dawid       |       Chrz¥szcz       |       Matematyka|8|8|8|Jacek       |       Pyszka       |       3j       |       r       |       s
-Dawid|Chrz¥szcz|Matematyka|90|90|90|Jacek|Pyszka|3j|r|s |Dawid|Chrz¥szcz|6j|p|o
+chuj|maniek|4|12.06.2025|10:15|11:45|Jaca|Placa|4b|r|s    |Jacek|Pyszka|4a|r|s    |Jacek|Chuj|3j|r|s
+chuj|maniek|4|13.06.2025|10:15|11:45|Jacek|Chuj|3j|r|s  |Dawid|Chrz¥szcz|6j|p|o  |maniek|adam|4f|r|s  |Jaca|Placa|4b|r|s  |awda|awda|dawd|awd|awd  |Jacek|Pyszka|4a|r|s
+Dawid|Chrz¥szcz|Matematyka|15.06.2025|10:15|11:45|Jacek|Chuj|3j|r|s   |Dawid|Chrz¥szcz|6j|p|o   |maniek|adam|4f|r|s   |Jaca|Placa|4b|r|s   |awda|awda|dawd|awd|awd   |Jacek|Pyszka|4a|r|s
+chuj|maniek|4|25.06.2025|13:00|14:30|Jacek|Chuj|3j|r|s |Dawid|Chrz¥szcz|6j|p|o |Jacek|Pyszka|4a|r|s
+Dawid|Chrz¥szcz|Matematyka|66|66|66|Jacek|Pyszka|3j|r|s      |Dawid|Chrz¥szcz|6j|p|o      |maniek|adam|4f|r|s
+Dawid|Chrz¥szcz|Matematyka|90|90|90|Jacek|Pyszka|3j|r|s     |Dawid|Chrz¥szcz|6j|p|o

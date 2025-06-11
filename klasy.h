@@ -71,10 +71,9 @@ public:
 	virtual ~Uczen() {}
 };
 
-void UstawUczen(Uczen u1)
+void UstawUczen(Uczen& u1)
 {
 	string imie, nazwisko, klasa, poziom, tryb;
-
 	cout<<"Podaj imiê ucznia: ";
 	cin >> imie;
 	u1.setImie(imie);
@@ -122,12 +121,10 @@ string modyfikujUczen() {
 	// Otwieranie plików 
 	ifstream szukaj("dane_uczen.txt");
 	ofstream zapiszTymczasowo("dane_tymczasowo.txt");
-
 	if (!szukaj.is_open() || !zapiszTymczasowo.is_open()) {
 		cout << "Nie mo¿na otworzyæ pliku do odczytu!" << endl;
 		return "";
 	}
-
 	bool znaleziono = false;
 	string linia;
 
@@ -290,7 +287,7 @@ public:
 	virtual ~Nauczyciel() {};
 };
 
-void UstawNauczyciel(Nauczyciel n1)
+void UstawNauczyciel(Nauczyciel& n1)
 {
 	string imie, nazwisko, przedmiot;
 
@@ -463,7 +460,7 @@ public:
 			przedmiot = nauczyciel.substr(pos2 + 1);
 		}
 	}
-	//konstruktor Domyslny
+	//Konstruktor domyslny
 	Zajecia() : nauczyciel(""), data(""), godzinaRozpoczecia(""), godzinaZakonczenia("") {}
 
 	// Metoda dodaj¹ca ucznia do zajêæ
@@ -489,7 +486,7 @@ public:
 	string getGodzinaRozpoczecia() const { return godzinaRozpoczecia; }
 	string getGodzinaZakonczenia() const { return godzinaZakonczenia; }
 
-	// POPRAWIONA METODA zapiszDoPliku
+	// Metoda zapiszDoPliku
 	string zapiszDoPliku() const {
 		stringstream ss;
 		ss << nauczyciel << "|" << data << "|"
@@ -504,6 +501,8 @@ public:
 
 		return ss.str();
 	}
+
+	//Metoda wczytajZPliku
 	static Zajecia wczytajZPliku(const string& linia) {
 		vector<string> wszystkieDane;
 		size_t start = 0;

@@ -18,7 +18,7 @@ int main()
         cout << "  4. Modyfikuj dane nauczyciela" << endl;
         cout << "  5. Harmonogram" << endl;
         cout << "  6. Wyjście z programu" << endl;
-        opcja = getchar();
+        cin >> opcja;
         switch (opcja)
         {
         case '1':
@@ -32,7 +32,7 @@ int main()
         {
             system("cls");
             cout<<modyfikujUczen();
-            Sleep(5000);
+            Sleep(3000);
             break;
         }
         case '3':
@@ -46,7 +46,7 @@ int main()
         {
             system("cls");
             cout<<modyfikujNauczyciel();
-            Sleep(5000);
+            Sleep(3000);
 
             break;
         }
@@ -64,9 +64,7 @@ int main()
                 cout << "2. Wyświetl harmonogram\n";
                 cout << "0. Wyjście\n";
                 cout << "Wybierz opcję: ";
-                cin.ignore();
-				wybor = getchar();
-
+                cin >> wybor;
                 switch (wybor) {
                 case '1':
                 {
