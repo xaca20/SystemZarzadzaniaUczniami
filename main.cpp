@@ -2,6 +2,7 @@
 
 int main()
 {
+    setlocale(LC_ALL, "Polish");
     int opcja = 0;
     do
     {

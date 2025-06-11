@@ -7,6 +7,8 @@
 #include<fstream>
 #include<Windows.h>
 using namespace std;
+
+
 // Definicje klas: Uczen, Nauczyciel, Przedmiot, Platnosc, Harmonogram
 class Uczen
 {
