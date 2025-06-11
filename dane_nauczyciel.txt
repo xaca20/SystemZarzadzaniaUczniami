@@ -1,1 +1,3 @@
 Mariusz|Kowalski|Matematyka|25
+Maniek|Adam|Fizyka|20
+Dawid|Pyszka|Matematyka|23
