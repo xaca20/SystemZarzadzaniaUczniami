@@ -443,7 +443,6 @@ string modyfikujNauczyciel() {
 }
 
 
-// Klasa reprezentuj¹ca pojedyncze zajêcia
 class Zajecia {
 private:
 	string nauczyciel;
@@ -455,8 +454,17 @@ private:
 
 public:
 	Zajecia(string nauczyciel, string przedmiot, string data, string godzRozp, string godzZak)
-		: nauczyciel(nauczyciel), przedmiot(przedmiot), data(data),
-		godzinaRozpoczecia(godzRozp), godzinaZakonczenia(godzZak) {}
+		: nauczyciel(nauczyciel), data(data), przedmiot(przedmiot),
+		godzinaRozpoczecia(godzRozp), godzinaZakonczenia(godzZak) {
+		// Parsowanie przedmiotu z danych nauczyciela
+		size_t pos1 = nauczyciel.find('|');
+		size_t pos2 = nauczyciel.find('|', pos1 + 1);
+		if (pos2 != string::npos) {
+			przedmiot = nauczyciel.substr(pos2 + 1);
+		}
+	}
+	//konstruktor Domyslny
+	Zajecia() : nauczyciel(""), data(""), godzinaRozpoczecia(""), godzinaZakonczenia("") {}
 
 	// Metoda dodaj¹ca ucznia do zajêæ
 	void dodajUcznia(const string& uczen) {
@@ -481,62 +489,69 @@ public:
 	string getGodzinaRozpoczecia() const { return godzinaRozpoczecia; }
 	string getGodzinaZakonczenia() const { return godzinaZakonczenia; }
 
-	// Metoda do zapisu zajêæ do pliku
+	// POPRAWIONA METODA zapiszDoPliku
 	string zapiszDoPliku() const {
 		stringstream ss;
-		ss << nauczyciel << "|" << przedmiot << "|" << data << "|"
+		ss << nauczyciel << "|" << data << "|"
 			<< godzinaRozpoczecia << "|" << godzinaZakonczenia << "|";
 
 		for (size_t i = 0; i < uczniowie.size(); ++i) {
 			ss << uczniowie[i];
 			if (i != uczniowie.size() - 1) {
-				ss << ",";
+				ss << " |";
 			}
 		}
 
 		return ss.str();
 	}
-
-	// Metoda do wczytywania zajêæ z pliku
 	static Zajecia wczytajZPliku(const string& linia) {
-		vector<string> elementy;
+		vector<string> wszystkieDane;
 		size_t start = 0;
 		size_t end = linia.find('|');
 
+		// Rozdziel wszystkie elementy
 		while (end != string::npos) {
-			elementy.push_back(linia.substr(start, end - start));
+			wszystkieDane.push_back(linia.substr(start, end - start));
 			start = end + 1;
 			end = linia.find('|', start);
 		}
+		wszystkieDane.push_back(linia.substr(start));
 
-		// Ostatni element to lista uczniów oddzielona przecinkami
-		string uczniowieStr = linia.substr(start);
-		vector<string> uczniowie;
-		size_t uStart = 0;
-		size_t uEnd = uczniowieStr.find(',');
-
-		while (uEnd != string::npos) {
-			uczniowie.push_back(uczniowieStr.substr(uStart, uEnd - uStart));
-			uStart = uEnd + 1;
-			uEnd = uczniowieStr.find(',', uStart);
-		}
-		if (!uczniowieStr.empty()) {
-			uczniowie.push_back(uczniowieStr.substr(uStart));
+		// Minimalna walidacja - czy mamy wystarczaj¹co danych
+		if (wszystkieDane.size() < 6) {
+			throw runtime_error("Nieprawid³owy format danych - za ma³o informacji");
 		}
 
-		return Zajecia(elementy[0], elementy[1], elementy[2], elementy[3], elementy[4]);
+		// Tworzymy obiekt Zajecia
+		string nauczyciel = wszystkieDane[0] + "|" + wszystkieDane[1] + "|" + wszystkieDane[2];
+		string data = wszystkieDane[3];
+		string przedmiot = wszystkieDane[2];
+		string godzRozp = wszystkieDane[4];
+		string godzZak = wszystkieDane[5];
+		Zajecia zajecia(nauczyciel, przedmiot, data, godzRozp, godzZak);
+
+
+		// Dodajemy uczniów (zak³adaj¹c, ¿e ka¿dy uczeñ to 5 pól)
+		for (size_t i = 6; i + 4 < wszystkieDane.size(); i += 5) {
+			string uczen = wszystkieDane[i] + "|" + wszystkieDane[i + 1] + "|" + wszystkieDane[i+2] + "|" + wszystkieDane[i + 3] + "|" + wszystkieDane[i + 4];
+			zajecia.dodajUcznia(uczen);
+		}
+
+		return zajecia;
+
 	}
+	
 };
 
 // Klasa zarz¹dzaj¹ca harmonogramem
 class Harmonogram {
 private:
-	map<string, vector<Zajecia>> harmonogram; // Klucz: data, wartoœæ: lista zajêæ
-
+	map<string, vector<Zajecia>> harmonogram; // mapa data -> vector zajêæ
+	vector<Zajecia> wszystkieZajecia;        // dodatkowy vector wszystkich zajêæ
 	// Metoda wczytuj¹ca dane z pliku
 	vector<string> wczytajDane(const string& plik) {
 		vector<string> dane;
-		ifstream file(plik);
+		ifstream file(plik, ios::app);
 		string linia;
 
 		while (getline(file, linia)) {
@@ -545,7 +560,7 @@ private:
 
 		return dane;
 	}
-	vector<string> rozdzielDane(const string& linia) {
+	vector<string> rozdzielDane(const string& linia) const {
 		vector<string> elementy;
 		size_t start = 0;
 		size_t end = linia.find('|');
@@ -559,8 +574,87 @@ private:
 
 		return elementy;
 	}
+	
 public:
-	// Metoda dodaj¹ca nowe zajêcia
+	// Metoda wyœwietlaj¹ca wszystkie zajêcia
+	void wyswietlHarmonogram() {
+		if (wszystkieZajecia.empty()) {
+			cout << "Brak danych o zajêciach." << endl;
+			return;
+		}
+
+		for (const auto& zajecia : wszystkieZajecia) {
+			wyswietlPojedynczeZajecia(zajecia);
+		}
+	}
+	// Metoda wyœwietlaj¹ca pojedyncze zajêcia
+	void wyswietlPojedynczeZajecia(const Zajecia& zajecia) {
+		cout << "----------------------------------------" << endl;
+		cout << "      Nauczyciel: " << zajecia.getNauczyciel() << endl;
+		cout << "      Data zajêæ: " << zajecia.getData() << endl;
+		cout << "      Przedmiot: " << zajecia.getPrzedmiot() << endl;
+		cout << "      Godzina rozpoczêcia: " << zajecia.getGodzinaRozpoczecia() << endl;
+		cout << "      Godzina zakoñczenia: " << zajecia.getGodzinaZakonczenia() << endl;
+
+		const vector<string>& uczniowie = zajecia.getUczniowie();
+		if (!uczniowie.empty()) {
+			cout << "      Lista uczniów:" << endl;
+
+			for (size_t i = 0; i < uczniowie.size(); ++i) {
+				cout << "      " << i + 1 << ". " << uczniowie[i] << endl;
+			}
+		}
+		else {
+			cout << "Brak uczniów zapisanych na zajêcia." << endl;
+		}
+
+		cout << "----------------------------------------" << endl;
+	}
+
+	void wczytajZPliku() {
+		harmonogram.clear();
+		wszystkieZajecia.clear();
+
+		ifstream plik("harmonogramy.txt");
+		if (!plik.is_open()) {
+			cerr << "Uwaga: Nie znaleziono pliku harmonogram.txt" << endl;
+			return;
+		}
+
+		string linia;
+		while (getline(plik, linia)) {
+			if (!linia.empty()) {
+				try {
+					Zajecia zajecia = Zajecia::wczytajZPliku(linia);
+					harmonogram[zajecia.getData()].push_back(zajecia);
+					wszystkieZajecia.push_back(zajecia);
+				}
+				catch (const exception& e) {
+					cerr << "B³¹d przetwarzania linii: " << linia << " - " << e.what() << endl;
+				}
+			}
+		}
+		plik.close();
+	}
+	
+	void zapiszDoPliku() {
+		ofstream plik("harmonogramy.txt");
+		if (!plik.is_open()) {
+			cout << "Nie mo¿na otworzyæ pliku do zapisu!\n";
+			return;
+		}
+
+		map<string, vector<Zajecia>>::const_iterator it;
+		for (it = harmonogram.begin(); it != harmonogram.end(); ++it) {
+			const vector<Zajecia>& listaZajec = it->second;
+
+			for (size_t i = 0; i < listaZajec.size(); ++i) {
+				plik << listaZajec[i].zapiszDoPliku() << "\n";
+			}
+		}
+		plik.close();
+	};
+	// POPRAWIONA METODA dodajZajecia W KLASIE Harmonogram
 	void dodajZajecia() {
 		cout << "==== DODAWANIE NOWYCH ZAJÊÆ ====\n";
 
@@ -575,6 +669,12 @@ public:
 		int wyborNauczyciela;
 		cout << "Wybierz numer nauczyciela: ";
 		cin >> wyborNauczyciela;
+
+		if (wyborNauczyciela < 1 || wyborNauczyciela > nauczyciele.size()) {
+			cout << "Nieprawid³owy wybór!\n";
+			return;
+		}
+
 		string wybranyNauczyciel = nauczyciele[wyborNauczyciela - 1];
 
 		// Wczytanie danych zajêæ
@@ -586,9 +686,7 @@ public:
 		cout << "Podaj godzinê zakoñczenia (GG:MM): ";
 		cin >> godzZak;
 		cout << "Podaj przedmiot: ";
-		cin.ignore();
-		getline(cin, przedmiot);
-
+		cin >> przedmiot;
 		// Sprawdzenie czy termin jest wolny
 		if (czyTerminZajety(data, godzRozp, godzZak)) {
 			cout << "Termin jest ju¿ zajêty!\n";
@@ -603,13 +701,15 @@ public:
 		cout << "Dostêpni uczniowie:\n";
 		for (size_t i = 0; i < uczniowie.size(); ++i) {
 			vector<string> dane = rozdzielDane(uczniowie[i]);
-			cout << i + 1 << ". " << dane[0] << " " << dane[1] << " (" << dane[2] << ")\n";
+			cout << i + 1 << ". " << dane[0] << " " << dane[1] << " " << dane[2] << " " << dane[3] << " " << dane[4] << endl;
 		}
 
 		cout << "Wybierz numery uczniów (0 aby zakoñczyæ):\n";
 		int wybor;
 		while (cin >> wybor && wybor != 0) {
-			noweZajecia.dodajUcznia(uczniowie[wybor - 1]);
+			if (wybor > 0 && wybor <= uczniowie.size()) {
+				noweZajecia.dodajUcznia(uczniowie[wybor - 1]);
+			}
 		}
 
 		// Dodanie do harmonogramu
@@ -618,7 +718,6 @@ public:
 
 		cout << "Zajêcia zosta³y dodane do harmonogramu!\n";
 	}
-
 	// Metoda sprawdzaj¹ca czy termin jest zajêty
 	bool czyTerminZajety(const string& data, const string& godzRozp, const string& godzZak) {
 		if (harmonogram.find(data) == harmonogram.end()) {
@@ -636,111 +735,6 @@ public:
 		return false;
 	}
 
-	void wyswietlHarmonogram() const {
-		cout << "=== HARMONOGRAM ZAJÊÆ ===\n";
-
-		if (harmonogram.empty()) {
-			cout << "Harmonogram jest pusty.\n";
-			return;
-		}
-
-		map<string, vector<Zajecia>>::const_iterator it;
-		for (it = harmonogram.begin(); it != harmonogram.end(); ++it) {
-			string data = it->first;
-			const vector<Zajecia>& listaZajec = it->second;
-
-			cout << "Data: " << data << "\n";
-
-			for (size_t i = 0; i < listaZajec.size(); ++i) {
-				const Zajecia& zajecia = listaZajec[i];
-				cout << "  " << zajecia.getGodzinaRozpoczecia() << "-" << zajecia.getGodzinaZakonczenia()
-					<< ": " << zajecia.getPrzedmiot() << " (" << zajecia.getNauczyciel() << ")\n";
-				cout << "  Uczniowie: ";
-
-				const vector<string>& uczniowie = zajecia.getUczniowie();
-				for (size_t j = 0; j < uczniowie.size(); ++j) {
-					cout << uczniowie[j];
-					if (j != uczniowie.size() - 1) {
-						cout << ", ";
-					}
-				}
-				cout << "\n\n";
-			}
-		}
-	}
-
-	void zapiszDoPliku() {
-		ofstream plik("harmonogram.txt");
-		if (!plik.is_open()) {
-			cout << "Nie mo¿na otworzyæ pliku do zapisu!\n";
-			return;
-		}
-
-		map<string, vector<Zajecia>>::const_iterator it;
-		for (it = harmonogram.begin(); it != harmonogram.end(); ++it) {
-			const vector<Zajecia>& listaZajec = it->second;
-
-			for (size_t i = 0; i < listaZajec.size(); ++i) {
-				plik << listaZajec[i].zapiszDoPliku() << "\n";
-			}
-		}
-		plik.close();
-	}
-
-	void wczytajZPliku() {
-		ifstream plik("harmonogram.txt");
-		if (!plik.is_open()) {
-			cout << "Nie mo¿na otworzyæ pliku do odczytu!\n";
-			return;
-		}
-
-		string linia;
-		while (getline(plik, linia)) {
-			Zajecia zajecia = Zajecia::wczytajZPliku(linia);
-			harmonogram[zajecia.getData()].push_back(zajecia);
-		}
-		plik.close();
-	}
-
-
-	static Zajecia wczytajZPliku(const string& linia) {
-		vector<string> elementy;
-		size_t start = 0;
-		size_t end = linia.find('|');
-
-		while (end != string::npos) {
-			elementy.push_back(linia.substr(start, end - start));
-			start = end + 1;
-			end = linia.find('|', start);
-		}
-
-		// Parsowanie uczniów
-		string uczniowieStr = linia.substr(start);
-		vector<string> uczniowie;
-		size_t uStart = 0;
-		size_t uEnd = uczniowieStr.find(',');
-
-		while (uEnd != string::npos) {
-			uczniowie.push_back(uczniowieStr.substr(uStart, uEnd - uStart));
-			uStart = uEnd + 1;
-			uEnd = uczniowieStr.find(',', uStart);
-		}
-		if (!uczniowieStr.empty()) {
-			uczniowie.push_back(uczniowieStr.substr(uStart));
-		}
-
-		// Tworzenie obiektu zajêæ
-		Zajecia zajecie(elementy[0], elementy[1], elementy[2], elementy[3], elementy[4]);
-
-		// Dodawanie uczniów
-		for (const auto& uczen : uczniowie) {
-			zajecie.dodajUcznia(uczen);
-		}
-
-		return zajecie;
-	}
-
-	
 };
 
 #endif // KLASY_H
