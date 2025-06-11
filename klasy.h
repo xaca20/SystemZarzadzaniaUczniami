@@ -119,7 +119,7 @@ string modyfikujUczen() {
 	cin >> nazwisko;
 	cout << endl;
 
-	// Otwieranie plików - poprawione flagi
+	// Otwieranie plików 
 	ifstream szukaj("dane_uczen.txt");
 	ofstream zapiszTymczasowo("dane_tymczasowo.txt");
 
@@ -328,7 +328,7 @@ string modyfikujNauczyciel() {
 	cin >> nazwisko;
 	cout << endl;
 
-	// Otwieranie plików - poprawione flagi
+	// Otwieranie plików 
 	ifstream szukaj("dane_nauczyciel.txt");
 	ofstream zapiszTymczasowo("dane_tymczasowo.txt");
 

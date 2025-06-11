@@ -18,7 +18,6 @@ int main()
         cout << "  4. Modyfikuj dane nauczyciela" << endl;
         cout << "  5. Harmonogram" << endl;
         cout << "  6. Wyjście z programu" << endl;
-        cin.ignore();
         opcja = getchar();
         switch (opcja)
         {
@@ -83,6 +82,7 @@ int main()
                 }
                 default:
                 {
+                    cin.ignore();
                     system("cls");
                     cout << "Nieznana opcja! Spróbuj ponownie!" << endl;
                     break;
@@ -101,6 +101,7 @@ int main()
         }
         default:
         {
+            cin.ignore();
             cout << "Nieznana opcja! Spróbuj ponownie!" << endl;
             Sleep(2000);
             break;
