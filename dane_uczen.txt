@@ -1,2 +1,3 @@
 Dawid|Chrzaszcz|4|r|s
-Jacek|Pyszka|7|r|s
+Jacek|Pyszka|7|p|s
+Maniek|Brudny|5g|p|s

@@ -3,6 +3,7 @@
 #define KLASY_H
 #include <iostream>
 #include<string>
+#include <vector>
 #include<fstream>
 #include<Windows.h>
 using namespace std;
@@ -99,122 +100,148 @@ void UstawUczen(Uczen u1)
 		}
 }
 
-//Funkcja do wyszukiwania ucznia w pliku
-string modyfikujUczen()
-{
-	Uczen u1; // Tworzenie obiektu ucznia do modyfikacji danych
+
+
+
+string modyfikujUczen() {
+	Uczen u1;
 	string imie, nazwisko;
 	cout << "Podaj imiê ucznia: ";
 	cin >> imie;
-	cout<<"Podaj nazwisko ucznia: ";
+	cout << "Podaj nazwisko ucznia: ";
 	cin >> nazwisko;
 	cout << endl;
 
-	//Przeszukuje plik dane_uczen.txt w poszukiwaniu ucznia o podanym imieniu i nazwisku
-	ifstream szukaj("dane_uczen.txt", ios::app);
-	// Plik tymczasowy do zapisu zmodyfikowanych danych
-	ofstream zapiszTymczasowo("dane_uczen_tymczasowo.txt", ios::app);
-	if (!szukaj || !zapiszTymczasowo) 
-	{
+	// Otwieranie plików - poprawione flagi
+	ifstream szukaj("dane_uczen.txt");
+	ofstream zapiszTymczasowo("dane_uczen_tymczasowo.txt");
+
+	if (!szukaj.is_open() || !zapiszTymczasowo.is_open()) {
 		cout << "Nie mo¿na otworzyæ pliku do odczytu!" << endl;
 		return "";
 	}
 
+	bool znaleziono = false;
 	string linia;
-	while (getline(szukaj, linia))
-	{
-		if (linia.find(imie) != string::npos && linia.find(nazwisko) != string::npos)
-		{
-			int wybor=0;
-			do
-			{
-			cout<<"Co chcesz zmieniæ w danych ucznia?"<<endl;
-			cout<<"1. Imiê"<<endl;
-			cout<<"2. Nazwisko"<<endl;
-			cout<<"3. Klasê"<<endl;
-			cout<<"4. Poziom"<<endl;
-			cout<<"5. Tryb"<<endl;
-			cout<<"6. Zakoñcz modyfikacjê"<<endl;
+
+	while (getline(szukaj, linia)) {
+		// Sprawdzamy czy linia zawiera zarówno imiê jak i nazwisko
+		size_t pos_imie = linia.find(imie);
+		size_t pos_nazwisko = linia.find(nazwisko);
+
+		if (pos_imie != string::npos && pos_nazwisko != string::npos) {
+			znaleziono = true;
+			int wybor = 0;
+
+			do {
+				cout << "\nCo chcesz zmieniæ w danych ucznia?" << endl;
+				cout << "1. Imiê" << endl;
+				cout << "2. Nazwisko" << endl;
+				cout << "3. Klasê" << endl;
+				cout << "4. Poziom" << endl;
+				cout << "5. Tryb" << endl;
+				cout << "6. Zakoñcz modyfikacjê" << endl;
+				cout << "Wybierz opcjê: ";
 				cin >> wybor;
-				switch (wybor)
-				{
-				case 1:
-				{
+
+				// Parsowanie linii na pola
+				size_t start = 0;
+				size_t end = linia.find('|');
+				vector<string> pola;
+
+				while (end != string::npos) {
+					pola.push_back(linia.substr(start, end - start));
+					start = end + 1;
+					end = linia.find('|', start);
+				}
+				pola.push_back(linia.substr(start));
+
+				switch (wybor) {
+				case 1: {
 					string noweImie;
 					cout << "Podaj nowe imiê ucznia: ";
 					cin >> noweImie;
 					u1.setImie(noweImie);
-					// Znajduje znak '|' w linii przed wartoœci¹ do zmiany i zastêpuje wartoœæ po nim
-					linia.replace((linia.find_last_of("|") + 2), string::npos, u1.getImie());
-					zapiszTymczasowo << linia << endl; // Zapisuje zmodyfikowan¹ liniê do pliku tymczasowego
+					pola[0] = noweImie;
 					break;
 				}
-				case 2:
-				{
+				case 2: {
 					string noweNazwisko;
 					cout << "Podaj nowe nazwisko ucznia: ";
 					cin >> noweNazwisko;
 					u1.setNazwisko(noweNazwisko);
-					linia.replace((linia.find_last_of("|") + 2), string::npos, u1.getNazwisko());
-					zapiszTymczasowo << linia << endl;
+					pola[1] = noweNazwisko;
 					break;
 				}
-				case 3:
-				{
+				case 3: {
 					string nowaKlasa;
 					cout << "Podaj now¹ klasê ucznia: ";
 					cin >> nowaKlasa;
 					u1.setKlasa(nowaKlasa);
-					linia.replace((linia.find_last_of("|") + 2), string::npos, u1.getKlasa());
-					zapiszTymczasowo << linia << endl;
+					pola[2] = nowaKlasa;
 					break;
 				}
-				case 4:
-				{
+				case 4: {
 					string nowyPoziom;
 					cout << "Podaj nowy poziom ucznia (p - podstawowy, r - rozszerzony): ";
 					cin >> nowyPoziom;
 					u1.setPoziom(nowyPoziom);
-					linia.replace((linia.find_last_of("|") + 2), string::npos, u1.getTryb());
-					zapiszTymczasowo << linia << endl;
+					pola[3] = nowyPoziom;
 					break;
 				}
-				case 5:
-				{
+				case 5: {
 					string nowyTryb;
 					cout << "Podaj nowy tryb ucznia (s - stacjonarny, o - online): ";
 					cin >> nowyTryb;
 					u1.setTryb(nowyTryb);
-					linia.replace(linia.find_last_of("|") + 2, string::npos, u1.getTryb());
-					zapiszTymczasowo << linia << endl;
+					pola[4] = nowyTryb;
 					break;
 				}
+				case 6:
+					cout << "Zakoñczono modyfikacjê." << endl;
+					break;
 				default:
-				{
-					cout << "Nieprawid³owy wybór." << endl;
+					cout << "Nieprawid³owy wybór. Spróbuj ponownie." << endl;
 					break;
 				}
+
+				// Rekonstrukcja linii z pól
+				linia.clear();
+				for (size_t i = 0; i < pola.size(); ++i) {
+					linia += pola[i];
+					if (i != pola.size() - 1) {
+						linia += "|";
+					}
 				}
-			} while (wybor!=6);
-			szukaj.close();
-			zapiszTymczasowo.close();
-			remove("dane_uczen.txt"); // Usuwa oryginalny plik
-			rename("dane_uczen_tymczasowo.txt", "dane_uczen.txt"); // Zmienia nazwê pliku tymczasowego na oryginalny
-			cout<<"Zmiany zostaly zapisane."<<endl;
-			Sleep(5000);
-			break;
+
+			} while (wybor != 6);
+
+			// Zapis zmodyfikowanej linii
+			zapiszTymczasowo << linia << endl;
 		}
-		else
-		{
-			szukaj.close();
-			zapiszTymczasowo.close();
-			cout << "Nie znaleziono ucznia o podanym imieniu i nazwisku." << endl;
-			return ""; // Zwraca pusty string, jeœli nie znaleziono ucznia
-			break;
+		else {
+			// Zapis linii bez zmian
+			zapiszTymczasowo << linia << endl;
 		}
 	}
+
+	szukaj.close();
+	zapiszTymczasowo.close();
+
+	if (!znaleziono) {
+		cout << "Nie znaleziono ucznia o podanym imieniu i nazwisku." << endl;
+		remove("dane_uczen_tymczasowo.txt"); // Usuwamy niepotrzebny plik tymczasowy
+		return "";
+	}
+
+	// Zamiana plików
+	remove("dane_uczen.txt");
+	rename("dane_uczen_tymczasowo.txt", "dane_uczen.txt");
+
+	cout << "Zmiany zosta³y zapisane." << endl;
+	Sleep(1000);
+
 	return "";
-	
 }
 
 class Nauczyciel
