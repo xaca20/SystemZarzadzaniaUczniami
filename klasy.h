@@ -703,7 +703,7 @@ public:
 		int wybor;
 		while (cin >> wybor && wybor != 0) {
 			if (wybor > 0 && wybor <= uczniowie.size()) {
-				noweZajecia.dodajUcznia(uczniowie[wybor - 1]);
+				noweZajecia.dodajUcznia(uczniowie[static_cast<std::vector<std::string, std::allocator<std::string>>::size_type>(wybor) - 1]);
 			}
 		}
 

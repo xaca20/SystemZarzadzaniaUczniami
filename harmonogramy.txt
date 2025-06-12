@@ -1,3 +1,1 @@
-Dawid|Chrz¥szcz|Matematyka|15.06.2025|14:00|15:00|
-Dawid|Chrz¥szcz|Matematyka|17.07.2026|18|19|Brygida|Nowak|4c|p|s
-Dawid|Chrz¥szcz|Matematyka|18.07.2025|19|20|Brygida|Nowak|4c|p|s
+Michael|Jordan|WF|12.06.2025|11:00|12:30|Jacek|Pyszka|5a|p|s
