@@ -106,9 +106,6 @@ void UstawUczen(Uczen& u1)
 		}
 }
 
-
-
-
 string modyfikujUczen() {
 	Uczen u1;
 	string imie, nazwisko;
@@ -424,7 +421,7 @@ string modyfikujNauczyciel() {
 	zapiszTymczasowo.close();
 
 	if (!znaleziono) {
-		cout << "Nie znaleziono ucznia o podanym imieniu i nazwisku." << endl;
+		cout << "Nie znaleziono nauczyciela o podanym imieniu i nazwisku." << endl;
 		remove("dane_tymczasowo.txt"); // Usuwamy niepotrzebny plik tymczasowy
 		return "";
 	}
@@ -467,14 +464,6 @@ public:
 	void dodajUcznia(const string& uczen) {
 		if (find(uczniowie.begin(), uczniowie.end(), uczen) == uczniowie.end()) {
 			uczniowie.push_back(uczen);
-		}
-	}
-
-	// Metoda usuwaj¹ca ucznia z zajêæ
-	void usunUcznia(const string& uczen) {
-		auto it = find(uczniowie.begin(), uczniowie.end(), uczen);
-		if (it != uczniowie.end()) {
-			uczniowie.erase(it);
 		}
 	}
 
@@ -684,8 +673,6 @@ public:
 		cin >> godzRozp;
 		cout << "Podaj godzinê zakoñczenia (GG:MM): ";
 		cin >> godzZak;
-		cout << "Podaj przedmiot: ";
-		cin >> przedmiot;
 		// Sprawdzenie czy termin jest wolny
 		if (czyTerminZajety(data, godzRozp, godzZak)) {
 			cout << "Termin jest ju¿ zajêty!\n";
