@@ -236,8 +236,12 @@ string modyfikujUczen() {
 	}
 
 	// Zamiana plików
-	remove("dane_uczen.txt");
-	rename("dane_tymczasowo.txt", "dane_uczen.txt");
+	if (remove("dane_uczen.txt") != 0) {
+		perror("B³¹d przy usuwaniu pliku dane_uczen.txt");
+	}
+	if (rename("dane_tymczasowo.txt", "dane_uczen.txt") != 0) {
+		perror("B³¹d przy zmianie nazwy pliku");
+	}
 
 	cout << "Zmiany zosta³y zapisane." << endl;
 	Sleep(1000);
@@ -427,8 +431,13 @@ string modyfikujNauczyciel() {
 	}
 
 	// Zamiana plików
-	remove("dane_nauczyciel.txt");
-	rename("dane_tymczasowo.txt", "dane_nauczyciel.txt");
+	if (remove("dane_nauczyciel.txt") != 0) {
+		perror("B³¹d przy usuwaniu pliku dane_uczen.txt");
+	}
+	if (rename("dane_tymczasowo.txt", "dane_nauczyciel.txt") != 0) {
+		perror("B³¹d przy zmianie nazwy pliku");
+	}
+
 
 	cout << "Zmiany zosta³y zapisane." << endl;
 	Sleep(1000);
