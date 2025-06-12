@@ -68,7 +68,6 @@ public:
 	{
 		return tryb;
 	}
-	virtual ~Uczen() {}
 };
 
 void UstawUczen(Uczen& u1)
@@ -284,8 +283,6 @@ public:
 	{
 		return przedmiot;
 	}
-
-	virtual ~Nauczyciel() {};
 };
 
 void UstawNauczyciel(Nauczyciel& n1)
